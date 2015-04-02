@@ -33,10 +33,12 @@ var three = (addThree _).curried
 var two = three(1)
 var one = two(1)
 one(1)
+
 def addThreeNew(a: Int)(b: Int)(c: Int): Int = a + b + c
 var twoNew = addThreeNew(1) _
 var oneNew = twoNew(1)
 oneNew(1)
+
 /**
  * 3. classes: class A(a: Int){...},
  */
