@@ -22,3 +22,5 @@ class Free[F[_], A](implicit F: Functor[F]) {
     x => Done(f(x))
   }
 }
+
+trait Store[A]

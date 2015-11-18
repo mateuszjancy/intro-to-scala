@@ -1,16 +1,13 @@
 package com.flashcard
 
-import java.sql.{Connection, DriverManager, ResultSet}
+import java.sql.{Connection, DriverManager, PreparedStatement, ResultSet}
+
+import com.flashcard.service.Flashcard
 
 
-object Repository {
+object DB {
   Class.forName("org.h2.Driver")
   private val connection = DriverManager.getConnection("jdbc:h2:mem:test", "sa", "")
-
-  //bootstrap
-  private val stmt = connection.prepareStatement("CREATE TABLE FLASHCARD (ID INT PRIMARY KEY, WORD VARCHAR, TRANSLATION VARCHAR)")
-  stmt.execute()
-
 
   implicit val converter2Flashcard = new Converter[ResultSet, Flashcard] {
     override def convert(rs: ResultSet): Flashcard = Flashcard(
@@ -32,32 +29,36 @@ object Repository {
   }
 
   def apply() = {
-    new Repository(connection)
+    new DB(connection)
   }
 }
 
-class Repository(connection: Connection) {
+class DB(connection: Connection) {
 
-  def +(e: (Int, Flashcard)): Repository = {
-    val stmt = connection.prepareStatement("INSERT INTO FLASHCARD (ID, WORD, TRANSLATION) VALUES (?, ?, ?)")
-    stmt.setInt(1, e._1)
-    stmt.setString(2, e._2.word)
-    stmt.setString(3, e._2.translation)
-
-    stmt.executeUpdate()
-
+  def call(sql: String)(f: PreparedStatement => PreparedStatement): DB = {
+    val stmt = connection.prepareStatement(sql)
+    f(stmt).executeUpdate()
     this
   }
 
-  def :+(e: (Int, Flashcard)): Repository = {
-    val stmt = connection.prepareStatement("UPDATE FLASHCARD SET WORD = ?, TRANSLATION = ? WHERE ID = ?")
+  def createTable(sql: String): DB = {
+    val stmt = connection.prepareStatement(sql)
+    stmt.execute()
+    this
+  }
+
+  def +(e: (Int, Flashcard)): DB = call("INSERT INTO FLASHCARD (ID, WORD, TRANSLATION) VALUES (?, ?, ?)") { stmt =>
+    stmt.setInt(1, e._1)
+    stmt.setString(2, e._2.word)
+    stmt.setString(3, e._2.translation)
+    stmt
+  }
+
+  def :+(e: (Int, Flashcard)): DB = call("UPDATE FLASHCARD SET WORD = ?, TRANSLATION = ? WHERE ID = ?") { stmt =>
     stmt.setString(1, e._2.word)
     stmt.setString(2, e._2.translation)
     stmt.setInt(3, e._1)
-
-    stmt.executeUpdate()
-
-    this
+    stmt
   }
 
   def get(id: Int)(implicit converter: Converter[ResultSet, Flashcard]): Flashcard = {
@@ -70,13 +71,9 @@ class Repository(connection: Connection) {
     }
   }
 
-  def -(id: Int) = {
-    val stmt = connection.prepareStatement("DELETE FROM FLASHCARD WHERE ID = ?")
+  def -(id: Int) = call("DELETE FROM FLASHCARD WHERE ID = ?") { stmt =>
     stmt.setInt(1, id)
-
-    stmt.execute()
-
-    this
+    stmt
   }
 
 

@@ -1,6 +1,6 @@
-package com.flashcard
+package com.flashcard.service
 
-sealed trait Store[A]
+import com.flashcard.Store
 
 case class Put[A](key: Int, value: Flashcard, a: A) extends Store[A]
 
@@ -9,3 +9,4 @@ case class Update[A](key: Int, value: Flashcard, a: A) extends Store[A]
 case class Get[A](key: Int, h: Flashcard => A) extends Store[A]
 
 case class Delete[A](key: Int, a: A) extends Store[A]
+

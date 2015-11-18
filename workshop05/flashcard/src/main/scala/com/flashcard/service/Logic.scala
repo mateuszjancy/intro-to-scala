@@ -1,6 +1,8 @@
-package com.flashcard
+package com.flashcard.service
 
-object Program {
+import com.flashcard._
+
+object Logic {
   implicit val functor = new Functor[Store] {
     override def map[A, B](a: Store[A])(f: (A) => B): Store[B] = a match {
       case Put(k, v, a) => Put(k, v, f(a))
@@ -24,4 +26,6 @@ object Program {
     v <- get(key)
     _ <- update(key, f(v))
   } yield ()
+
+
 }
