@@ -1,6 +1,6 @@
 package com.flashcard.service
 
-import com.flashcard.Store
+import com.flashcard.{Flashcard, Store}
 
 case class Put[A](key: Int, value: Flashcard, a: A) extends Store[A]
 

@@ -2,8 +2,6 @@ package com.flashcard
 
 import java.sql.{Connection, DriverManager, PreparedStatement, ResultSet}
 
-import com.flashcard.service.Flashcard
-
 
 object DB {
   Class.forName("org.h2.Driver")
