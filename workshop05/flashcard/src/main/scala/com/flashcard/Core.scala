@@ -23,4 +23,3 @@ class Free[F[_], A](implicit F: Functor[F]) {
   }
 }
 
-trait Store[A]

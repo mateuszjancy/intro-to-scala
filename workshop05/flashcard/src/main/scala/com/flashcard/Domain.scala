@@ -1,5 +1,5 @@
 package com.flashcard
 
-case class Flashcard(id: Int, word: String, translation: String) {
+case class Flashcard(id: Int, word: String, translation: String)
 
-}
+trait Store[A]
