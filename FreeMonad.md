@@ -62,9 +62,11 @@ def runKVS[A](kvs: Free[KVS, A], table: Map[String, String]): Map[String, String
 runKVS(modify("a", f => f.toUpperCase), Map("a"->"aa", "b" -> "bb"))
 ```
 ###Free Monads and Scalaz###
-```
+[Free Monads in Scalaz - how to use them](https://www.chrisstucchio.com/blog/2015/free_monads_in_scalaz.html)
+[Free Monads Are Simple](http://underscore.io/blog/posts/2015/04/14/free-monads-are-simple.html)
+[learning Scalaz — Free Monad](http://eed3si9n.com/learning-scalaz/Free+Monad.html)
+```scala
 package io.underscore.freemonadsaresimple
-
 
 import scalaz.{Free, Functor}
 
