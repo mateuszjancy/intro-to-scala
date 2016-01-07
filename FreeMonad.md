@@ -132,7 +132,8 @@ object Interpreter {
       }
     case Call(template, call) => run(repository, call(repository))
     case Convert(result, convert) =>
-      if (result.next) run(repository, convert(result)) else run(repository, Free.liftF(Fail("No value")))
+      if (result.next) run(repository, convert(result)) 
+      else run(repository, Free.liftF(Fail("No value")))
     case Fail(msg) => Left(msg)
   },
   (a: A) => Right(a)
