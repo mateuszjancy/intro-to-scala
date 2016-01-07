@@ -61,3 +61,94 @@ def runKVS[A](kvs: Free[KVS, A], table: Map[String, String]): Map[String, String
 
 runKVS(modify("a", f => f.toUpperCase), Map("a"->"aa", "b" -> "bb"))
 ```
+###Free Monads and Scalaz###
+```
+package io.underscore.freemonadsaresimple
+
+
+import scalaz.{Free, Functor}
+
+object Mock {
+  case class Result(value: String, next: Boolean)
+  case class Repository(next: Boolean) {
+    def execute(sql: String): Result = Result(sql.toUpperCase, next)
+  }
+}
+
+import io.underscore.freemonadsaresimple.Mock._
+
+object Language {
+
+  sealed trait Data[+A]
+
+  case class Template[Next](template: String, call: String => Next) extends Data[Next]
+
+  case class Call[Next](template: String, call: Repository => Next) extends Data[Next]
+
+  case class Convert[Next](convert: Result, call: Result => Next) extends Data[Next]
+
+  case class Fail(msg: String) extends Data[Nothing]
+
+  implicit val functor = new Functor[Data] {
+    override def map[A, B](data: Data[A])(map: (A) => B): Data[B] = data match {
+      case Template(template, call) => Template(template, v => map(call(v)))
+      case Call(template, call) => Call(template, connection => map(call(connection)))
+      case Convert(from, convert) => Convert(from, entity => map(convert(entity)))
+      case Fail(msg) => Fail(msg)
+    }
+  }
+}
+
+object Logic {
+
+  import Language._
+
+  val templates: Map[String, String] = Map("a" -> "table_a")
+
+  def template(template: String): Free[Data, String] = Free.liftF(Template(template, t => t))
+
+  def call(sql: String): Free[Data, Result] = Free.liftF(Call(sql, connection =>
+    connection.execute(sql)
+  ))
+
+  def convert(rs: Result): Free[Data, String] = Free.liftF(Convert(rs, r => r.value))
+}
+
+object Interpreter {
+
+  import Language._
+
+  val templates: Map[String, String] = Map(
+    "a" -> "table_a"
+  )
+
+  def run[A](repository: Repository, data: Free[Data, A]): Either[String, A] = data.resume.fold({
+    case Template(template, call) =>
+      templates.get(template) match {
+        case Some(t) => run(repository, call(t))
+        case None => run(repository, Free.liftF(Fail(template)))
+      }
+    case Call(template, call) => run(repository, call(repository))
+    case Convert(result, convert) =>
+      if (result.next) run(repository, convert(result)) else run(repository, Free.liftF(Fail("No value")))
+    case Fail(msg) => Left(msg)
+  },
+  (a: A) => Right(a)
+  )
+}
+
+object FM extends App {
+
+  import Interpreter._
+  import Logic._
+
+  def request(name: String) = for {
+    sql <- template(name)
+    result <- call(sql)
+    response <- convert(result)
+  } yield response
+
+  val o = run(Repository(true), request("a"))
+  println(o)
+}
+```
