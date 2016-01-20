@@ -2,7 +2,7 @@
 To get familiar with scala tooling
 
 ##Build tools##
-###Ativator###
+###Activator###
 [Typesafe Activator](https://www.typesafe.com/community/core-tools/activator-and-sbt) is a single download to get you started building Reactive applications. To get started, you’ll need a JDK, your favorite editor or IDE, and Activator. Activator includes the sbt build tool, a quick-start GUI, and a catalog of template applications.
 * Rich UI
 * Project templates approach
