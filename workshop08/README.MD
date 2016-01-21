@@ -17,7 +17,7 @@ To get familiar with scala tooling
 [Gradle](http://gradle.org/) makes the impossible possible, the possible easy and the easy elegant.
 * Popular
 * Many plugins
-* Easy to use with unusuall requirements, if it's not enaught you can allways try maven ;)
+* Easy to use
 
 ##Web##
 ###Play###
@@ -25,7 +25,7 @@ To get familiar with scala tooling
 Play is based on a lightweight, stateless, web-friendly architecture.
 Built on Akka, Play provides predictable and minimal resource consumption (CPU, memory, threads) for highly-scalable applications.
 * Rubby on Rails like
-* Template enginr, DB abstraction, Cache abstraction... all in one, but do you need it all?
+* Template engine, DB abstraction, Cache abstraction... all in one, but do you need it all?
 * Safe choice but with many not used dependencies.
 [Anathomy](https://www.playframework.com/documentation/2.4.x/Anatomy)
 <pre>
@@ -227,7 +227,7 @@ var avg: Option[Float] =
 
 ###Slick###
 [Slick](http://slick.typesafe.com/) is a modern database query and access library for Scala. It allows you to work with stored data almost as if you were using Scala collections while at the same time giving you full control over when a database access happens and which data is transferred. 
-* Custom drivers provided by Typesafe, Oracle and SQLServer are with suspisius lincences ;)
+* Custom drivers provided by Typesafe, Oracle and SQLServer are with suspicious licence ;)
 * Good documentation
 * For more code go to [GETTING STARTED](http://slick.typesafe.com/doc/3.1.1/gettingstarted.html)
 ```scala
@@ -296,5 +296,4 @@ Observable.just(1, 2, 3, 4)
 [Scalaz](https://github.com/scalaz/scalaz) is a Scala library for functional programming.
 * It's end of scala kindergarden
 * [learning-scalaz](http://eed3si9n.com/learning-scalaz/)
-
 
