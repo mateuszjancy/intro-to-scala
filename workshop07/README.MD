@@ -66,6 +66,7 @@ Source:
 * [Free Monads in Scalaz - how to use them](https://www.chrisstucchio.com/blog/2015/free_monads_in_scalaz.html)
 * [Free Monads Are Simple](http://underscore.io/blog/posts/2015/04/14/free-monads-are-simple.html)
 * [learning Scalaz — Free Monad](http://eed3si9n.com/learning-scalaz/Free+Monad.html)
+* [Free notes](https://aappddeevv.gitbooks.io/test_private_book/content/foundations/free_monads.html)
 ```scala
 package io.underscore.freemonadsaresimple
 
