@@ -8,7 +8,7 @@ object Main extends App {
   val data = "aaa,bbb,cc,dd,e,f"
 
   def job(data: String) = for {
-    raw <- read(data)
+    raw <- read(data, Entity.apply)
     rawA <- calculateA(raw)
     a <- reject(rawA)
     rawB <- calculateB(raw)
@@ -16,6 +16,8 @@ object Main extends App {
     result <- join(a, b)
   } yield result.filter(_.isRight).map(_.right.get)
 
-  val o = run(Core(), job(data))
-  println(o)
+  val ok = run(Core(), job(data))
+  val err = run(Core(), job(""))
+  println(ok)
+  println(err)
 }

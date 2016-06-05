@@ -1,7 +1,9 @@
 package freetransformer
 
+import scala.util.{Failure, Try}
+
 trait Core {
-  def read(data: String): List[Entity]
+  def read(data: String): Try[List[String]]
 
   def calculateA(el: Entity): (Entity, Either[String, EntityWithA])
 
@@ -17,7 +19,7 @@ object Core {
 }
 
 class CoreImpl extends Core {
-  def read(data: String): List[Entity] = data.split(",").toList.map(Entity.apply)
+  def read(data: String): Try[List[String]] = if (data.isEmpty) Failure(new Exception("No items")) else Try(data.split(",").toList)
 
   def calculateA(el: Entity): (Entity, Either[String, EntityWithA]) =
     if (el.value.length > 2) {
